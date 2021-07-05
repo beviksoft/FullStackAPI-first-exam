@@ -5,7 +5,7 @@
  * @returns a tömbnek az az eleme, amelynek az id -je megegyezik a kapottal
  */
 const get = (list = [], id = 0) => {
-    //
+    return list.find(item => item.id === id)
 };
 
 /**
@@ -15,7 +15,14 @@ const get = (list = [], id = 0) => {
  * @returns a létrehozott, beszúrt és id -vel ellátott objektum
  */
 const create = (list = [], entity = null) => {
-    //
+    let maxId = -1;
+    list.forEach(item => {
+        maxId = item.id > maxId ? item.id : maxId
+    });
+    maxId += 1;
+    const newItem = { ...entity, id: maxId };
+    list.push(newItem);
+    return newItem;
 };
 
 /**
@@ -25,7 +32,17 @@ const create = (list = [], entity = null) => {
  * @returns a frissített objektum ha sikerült a frissítés, egyébként false
  */
 const update = (list = [], entity = {}) => {
-    //
+    if (list.length < 1 || !entity.id) {
+        return false;
+    };
+
+    const idx = list.findIndex(item => item.id === entity.id);
+    if (idx == -1) {
+        return false;
+    };
+
+    list[idx] = { ...list[idx], ...entity };
+    return list[idx];
 };
 
 /**
@@ -35,9 +52,25 @@ const update = (list = [], entity = {}) => {
  * @returns true ha sikeres volt a törlés, egyébként false
  */
 const remove = (list = [], id = 0) => {
-    //
+    if (list.length < 1 || !id) {
+        return false;
+    };
+
+    const i = list.findIndex(item => item.id === id);
+    if (i == -1) {
+        return false;
+    };
+
+    list.splice(i, 1);
+    return true;
 };
 
 /**
  * 5. Exportáld ki a négy függvényt, hogy más fájlokból is elérhetőek legyenek.
  */
+module.exports = {
+    get,
+    create,
+    update,
+    remove
+};
