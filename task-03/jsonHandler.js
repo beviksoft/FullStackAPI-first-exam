@@ -43,6 +43,10 @@ const update = async (entity = {}) => {
     const list = await getList();
 
     const idx = list.findIndex(item => item.id === entity.id);
+    if (idx == -1) {
+        return false;
+    };
+    
     list[idx] = { ...list[idx], ...entity };
 
     return await saveList(list) ? list[idx] : false;
