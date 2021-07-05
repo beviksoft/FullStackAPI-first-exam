@@ -26,8 +26,10 @@ const getList = async () => {
  * @returns true ha sikerült a frissítés, egyébként false (mod. by beviksoft !!!)
  */
 const saveList = async (list = []) => {
-    await fsp.writeFile(jsonPath, JSON.stringify(list, null, 4), 'utf8');
-    return true;
+    return await fsp.writeFile(jsonPath, JSON.stringify(list, null, 4), 'utf8')
+    .then( () => true)
+    .catch( () => false);
+    //return true;
 };
 
 /**
@@ -43,9 +45,9 @@ const update = async (entity = {}) => {
     const idx = list.findIndex(item => item.id === entity.id);
     list[idx] = { ...list[idx], ...entity };
 
-    await saveList(list);
+    return await saveList(list) ? list[idx] : false;
 
-    return list[idx];
+    //return list[idx];
 };
 
 module.exports = {
